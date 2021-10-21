@@ -58,4 +58,23 @@ class MainTest {
         }
 
     }
+
+    @Test
+    void volumeSort() {
+        Shape3D cub = new Cube(10);
+        Shape3D sph = new Sphere(10);
+        Shape3D cyl = new Cylinder(10, 5);
+        Shape3D sph2 = new Sphere(12);
+
+        Shape3D[] shapes = new Shape3D[]{cub, sph, cyl, sph2};
+
+        Shape3D[] sortedShapes = Main.volumeSort(shapes);
+
+        // Checking for correct sorting
+        for (int i = 0; i < sortedShapes.length - 1; i++) {
+            if (sortedShapes[i].getVolume() < sortedShapes[i + 1].getVolume()) {
+                fail("Incorrect sorting");
+            }
+        }
+    }
 }

@@ -50,7 +50,71 @@ public class Main {
         return topFiveHashtags;
     }
 
-    public static void main(String[] args) {
+    public static Shape3D[] volumeSort(Shape3D[] shapes3D) {
+        Shape3D[] sortedArr = shapes3D.clone();
+        Arrays.sort(sortedArr, Comparator.comparing(Shape3D::getVolume).reversed());
+        return sortedArr;
+    }
 
+}
+
+abstract class Shape3D {
+    private double volume;
+
+    abstract void calcVolume();
+
+    public double getVolume() {
+        return volume;
+    }
+
+    public void setVolume(double volume) {
+        this.volume = volume;
+    }
+}
+
+class Cube extends Shape3D {
+
+    private final double width;
+
+    public Cube(double width) {
+        this.width = width;
+        calcVolume();
+    }
+
+    @Override
+    void calcVolume() {
+        setVolume(Math.pow(width, 3));
+    }
+}
+
+class Sphere extends Shape3D {
+
+    private final double radius;
+
+    public Sphere(double radius) {
+        this.radius = radius;
+        calcVolume();
+    }
+
+    @Override
+    void calcVolume() {
+        setVolume((4 * Math.PI * Math.pow(radius, 3)) / 3);
+    }
+}
+
+class Cylinder extends Shape3D {
+
+    private final double radius;
+    private final double height;
+
+    public Cylinder(double radius, double height) {
+        this.radius = radius;
+        this.height = height;
+        calcVolume();
+    }
+
+    @Override
+    void calcVolume() {
+        setVolume(Math.PI * Math.pow(radius, 2) * height);
     }
 }
