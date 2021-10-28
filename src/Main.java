@@ -4,14 +4,12 @@ import java.util.regex.Pattern;
 
 public class Main {
 
-    public static ArrayList<Integer> arrSort(ArrayList<Integer> arr) {
-        ArrayList<Integer> outputArr = new ArrayList<>(arr);
-        // Removing negative elements
-        outputArr.removeIf(n -> n < 0);
+    public static List<Integer> arrSort(List<Integer> integerList) throws IllegalArgumentException  {
+        if (integerList == null) throw new IllegalArgumentException("Argument can`t be null");
+        else if (integerList.isEmpty()) return Collections.emptyList();
+        else if (integerList.contains(null)) throw new IllegalArgumentException("Argument can`t contain null");
 
-        Collections.sort(outputArr);
-        Collections.reverse(outputArr);
-        return outputArr;
+        return integerList.stream().filter(x -> x >= 0).sorted(Collections.reverseOrder()).toList();
     }
 
     public static List<Map.Entry<String, Integer>> topFiveHashtags(ArrayList<String> strings) {

@@ -1,3 +1,4 @@
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
@@ -8,20 +9,25 @@ class MainTest {
 
     @Test
     void arrSort() {
-        ArrayList<Integer> testArr = new ArrayList<>();
-        // -5 -4 -3 -2 -1 0 1 2 3 4 5
-        for (int i = -5; i <= 5; i++) {
-            testArr.add(i);
-        }
-
-        ArrayList<Integer> actual = Main.arrSort(testArr);
-
-        ArrayList<Integer> expected = new ArrayList<>();
-        // 5 4 3 2 1 0
-        for (int i = 5; i >= 0; i--) {
-            expected.add(i);
-        }
-        assertEquals(expected, actual);
+        List<Integer> testList = Arrays.asList(-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5);
+        Collections.shuffle(testList);
+        List<Integer> actual = Main.arrSort(testList);
+        // correct sorting test
+        assertEquals(Arrays.asList(5, 4, 3, 2, 1, 0), actual);
+        // empty list in argument test
+        assertEquals(Collections.emptyList(), Main.arrSort(Collections.emptyList()));
+        // null argument test
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            Main.arrSort(null);
+        });
+        // only negative digits
+        assertEquals(Collections.emptyList(), Main.arrSort(Arrays.asList(-5, -4, -3, -2, -1)));
+        // only positive digits
+        assertEquals(Arrays.asList(5, 4, 3, 2, 1), Main.arrSort(Arrays.asList(1, 2, 3, 4, 5)));
+        // null inside list test
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            Main.arrSort(Arrays.asList(null, null, null, null, null));
+        });
     }
 
     @Test
