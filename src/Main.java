@@ -4,7 +4,19 @@ import java.util.regex.Pattern;
 
 public class Main {
 
-    public static List<Integer> arrSort(List<Integer> integerList) throws IllegalArgumentException  {
+    public static void main(String[] args) {
+
+        ArrayList<String> strings = new ArrayList<>();
+        strings.add("#Hashtag1");
+        strings.add("#Hashtag2");
+        strings.add("#Hashtag3");
+        strings.add("#Hashtag4");
+        Map<String, Integer> actual;
+        actual = Main.topFiveHashtags(strings);
+        System.out.println(actual);
+    }
+
+    public static List<Integer> arrSort(List<Integer> integerList) throws IllegalArgumentException {
         if (integerList == null) throw new IllegalArgumentException("Argument can`t be null");
         else if (integerList.isEmpty()) return Collections.emptyList();
         else if (integerList.contains(null)) throw new IllegalArgumentException("Argument can`t contain null");
@@ -12,12 +24,17 @@ public class Main {
         return integerList.stream().filter(x -> x >= 0).sorted(Collections.reverseOrder()).toList();
     }
 
-    public static List<Map.Entry<String, Integer>> topFiveHashtags(ArrayList<String> strings) {
+    public static Map<String, Integer> topFiveHashtags(List<String> strings) throws IllegalArgumentException {
+        if(strings == null ) throw new IllegalArgumentException("Argument can`t be null");
+        else if(strings.isEmpty()) return new HashMap<>();
+        else if(strings.contains(null)) throw new IllegalArgumentException("Argument can`t contain null");
+
         HashMap<String, Integer> hashtagsCounter = new HashMap<>();
 
+        String pattern = "(#\\w*)";
+        Pattern r = Pattern.compile(pattern);
+
         for (String string : strings) {
-            String pattern = "(#\\w*)";
-            Pattern r = Pattern.compile(pattern);
             Matcher m = r.matcher(string);
 
             HashSet<String> stringHashtags = new HashSet<>();
@@ -35,17 +52,20 @@ public class Main {
             }
         }
 
-        // Sorting by repeatability
-        List<Map.Entry<String, Integer>> sortedHashtagTop = hashtagsCounter.entrySet().stream()
-                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed()).toList();
+        Map<String, Integer> topHashtags = new LinkedHashMap<>();
 
-        List<Map.Entry<String, Integer>> topFiveHashtags = new LinkedList<>();
+        // taking top 5 (or less) max count hashtags
+        int hashtagsCounterSize = hashtagsCounter.size();
+        for (int i = 0; i < hashtagsCounterSize && topHashtags.size() < 5; i++) {
+            Optional<Map.Entry<String, Integer>> optionalMaxEntry = hashtagsCounter.entrySet().stream()
+                    .max(Comparator.comparingInt(Map.Entry::getValue));
 
-        // The return is no more than the top 5
-        for (int i = 0; i < sortedHashtagTop.size() && i < 5; i++) {
-            topFiveHashtags.add(sortedHashtagTop.get(i));
+            if (optionalMaxEntry.isPresent()) {
+                topHashtags.put(optionalMaxEntry.get().getKey(), optionalMaxEntry.get().getValue());
+                hashtagsCounter.remove(optionalMaxEntry.get().getKey());
+            }
         }
-        return topFiveHashtags;
+        return topHashtags;
     }
 
     public static Shape3D[] volumeSort(Shape3D[] shapes3D) {

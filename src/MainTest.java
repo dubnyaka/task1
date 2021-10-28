@@ -33,6 +33,7 @@ class MainTest {
     @Test
     void topFiveHashtags() {
 
+        // argument example
         ArrayList<String> strings = new ArrayList<>();
         strings.add("#Lorem #Lorem #Lorem ipsum dolor sit #amet, consectetur adipiscing #elit, sed do eiusmod #tempor incididunt ut #labore et dolore magna aliqua.");
         strings.add("#Lorem #Lorem ipsum dolor sit #amet, consectetur adipiscing #elit #elit, sed do eiusmod #tempor incididunt ut labore et dolore magna aliqua.");
@@ -40,21 +41,19 @@ class MainTest {
         strings.add("#Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod #tempor #tempor incididunt ut labore et dolore magna aliqua.");
         strings.add("#Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod #tempor #tempor incididunt ut labore et dolore magna aliqua.");
 
-        List<Map.Entry<String, Integer>> actual;
+        Map<String, Integer> actual;
         actual = Main.topFiveHashtags(strings);
 
         // Size checking
         if (actual.size() > 5) fail("Array size more than 5: " + actual.size());
-
         // Hashtag checking
-        for (Map.Entry<String, Integer> entry : actual) {
+        for (Map.Entry<String, Integer> entry : actual.entrySet()) {
             if (entry.getKey().toCharArray()[0] != '#') {
                 fail("Not hashtag in top\n" + actual);
             }
         }
-
-        // Checking for correct sorting
-        Iterator<Map.Entry<String, Integer>> entryIterator = actual.iterator();
+        // Checking for correct sorting top
+        Iterator<Map.Entry<String, Integer>> entryIterator = actual.entrySet().iterator();
         int value = entryIterator.next().getValue();
         while (entryIterator.hasNext()) {
             int nextValue = entryIterator.next().getValue();
@@ -62,7 +61,20 @@ class MainTest {
                 fail("Incorrect sorting\n" + actual);
             }
         }
-
+        // Hashtag count test (expected tags/quantity)
+        assertEquals("{#tempor=5, #Lorem=5, #amet=3, #elit=2, #labore=1}", actual.toString());
+        // empty list in argument test
+        assertEquals(Collections.emptyMap(), Main.topFiveHashtags(Collections.emptyList()));
+        // null argument test
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            Main.topFiveHashtags(null);
+        });
+        // null inside list test
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            Main.topFiveHashtags(Arrays.asList("#null", "null", null, null, null));
+        });
+        // no hashtags in argument
+        assertEquals(Collections.emptyMap(), Main.topFiveHashtags(Arrays.asList("no hashtags in this string")));
     }
 
     @Test
