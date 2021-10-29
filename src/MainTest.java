@@ -79,20 +79,29 @@ class MainTest {
 
     @Test
     void volumeSort() {
-        Shape3D cub = new Cube(10);
-        Shape3D sph = new Sphere(10);
-        Shape3D cyl = new Cylinder(10, 5);
-        Shape3D sph2 = new Sphere(12);
 
-        Shape3D[] shapes = new Shape3D[]{cub, sph, cyl, sph2};
+        Shape3D cube = new Cube(10);
+        Shape3D sphere = new Sphere(10);
+        Shape3D cylinder = new Cylinder(10, 10);
 
-        Shape3D[] sortedShapes = Main.volumeSort(shapes);
+        List<Shape3D> testShapesList = Arrays.asList(cube, sphere, cylinder);
 
-        // Checking for correct sorting
-        for (int i = 0; i < sortedShapes.length - 1; i++) {
-            if (sortedShapes[i].getVolume() < sortedShapes[i + 1].getVolume()) {
-                fail("Incorrect sorting");
-            }
-        }
+        // expected correspond to real test
+        assertEquals(1000, (int) cube.getVolume());
+        assertEquals(4188, (int) sphere.getVolume());
+        assertEquals(3141, (int) cylinder.getVolume());
+        // sort test
+        assertEquals(Arrays.asList(sphere, cylinder, cube), Main.volumeSort(testShapesList));
+        // empty list in argument test
+        assertEquals(Collections.emptyList(), Main.volumeSort(Collections.emptyList()));
+        // null argument test
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            Main.volumeSort(null);
+        });
+        // null inside list test
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            Main.volumeSort(Arrays.asList(cube, cylinder, null, null, null));
+        });
+
     }
 }

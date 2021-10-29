@@ -4,18 +4,6 @@ import java.util.regex.Pattern;
 
 public class Main {
 
-    public static void main(String[] args) {
-
-        ArrayList<String> strings = new ArrayList<>();
-        strings.add("#Hashtag1");
-        strings.add("#Hashtag2");
-        strings.add("#Hashtag3");
-        strings.add("#Hashtag4");
-        Map<String, Integer> actual;
-        actual = Main.topFiveHashtags(strings);
-        System.out.println(actual);
-    }
-
     public static List<Integer> arrSort(List<Integer> integerList) throws IllegalArgumentException {
         if (integerList == null) throw new IllegalArgumentException("Argument can`t be null");
         else if (integerList.isEmpty()) return Collections.emptyList();
@@ -25,9 +13,9 @@ public class Main {
     }
 
     public static Map<String, Integer> topFiveHashtags(List<String> strings) throws IllegalArgumentException {
-        if(strings == null ) throw new IllegalArgumentException("Argument can`t be null");
-        else if(strings.isEmpty()) return new HashMap<>();
-        else if(strings.contains(null)) throw new IllegalArgumentException("Argument can`t contain null");
+        if (strings == null) throw new IllegalArgumentException("Argument can`t be null");
+        else if (strings.isEmpty()) return new HashMap<>();
+        else if (strings.contains(null)) throw new IllegalArgumentException("Argument can`t contain null");
 
         HashMap<String, Integer> hashtagsCounter = new HashMap<>();
 
@@ -68,26 +56,18 @@ public class Main {
         return topHashtags;
     }
 
-    public static Shape3D[] volumeSort(Shape3D[] shapes3D) {
-        Shape3D[] sortedArr = shapes3D.clone();
-        Arrays.sort(sortedArr, Comparator.comparing(Shape3D::getVolume).reversed());
-        return sortedArr;
+    public static List<Shape3D> volumeSort(List<Shape3D> shape3DList) throws IllegalArgumentException {
+        if (shape3DList == null) throw new IllegalArgumentException("Argument can`t be null");
+        else if (shape3DList.isEmpty()) return Collections.emptyList();
+        else if (shape3DList.contains(null)) throw new IllegalArgumentException("Argument can`t contain null");
+
+        return shape3DList.stream().sorted(Comparator.comparing(Shape3D::getVolume).reversed()).toList();
     }
 
 }
 
 abstract class Shape3D {
-    private double volume;
-
-    abstract void calcVolume();
-
-    public double getVolume() {
-        return volume;
-    }
-
-    public void setVolume(double volume) {
-        this.volume = volume;
-    }
+    abstract double getVolume();
 }
 
 class Cube extends Shape3D {
@@ -95,44 +75,43 @@ class Cube extends Shape3D {
     private final double width;
 
     public Cube(double width) {
-        this.width = width;
-        calcVolume();
+        if (width >= 0) this.width = width;
+        else this.width = 0;
     }
 
     @Override
-    void calcVolume() {
-        setVolume(Math.pow(width, 3));
+    double getVolume() {
+        return Math.pow(width, 3);
     }
 }
 
 class Sphere extends Shape3D {
-
     private final double radius;
 
     public Sphere(double radius) {
-        this.radius = radius;
-        calcVolume();
+        if (radius >= 0) this.radius = radius;
+        else this.radius = 0;
     }
 
     @Override
-    void calcVolume() {
-        setVolume((4 * Math.PI * Math.pow(radius, 3)) / 3);
+    double getVolume() {
+        return ((4 * Math.PI * Math.pow(radius, 3)) / 3);
     }
 }
 
 class Cylinder extends Shape3D {
-
     private final double radius;
     private final double height;
 
     public Cylinder(double radius, double height) {
-        this.radius = radius;
-        this.height = height;
-        calcVolume();
+        if (radius >= 0) this.radius = radius;
+        else this.radius = 0;
+        if (height >= 0) this.height = radius;
+        else this.height = 0;
     }
 
     @Override
-    void calcVolume() {
-        setVolume(Math.PI * Math.pow(radius, 2) * height);
+    double getVolume() {
+        return (Math.PI * Math.pow(radius, 2) * height);
     }
 }
